@@ -57,13 +57,13 @@ span, div {
 
 # LOGO
 current_dir = os.path.dirname(os.path.abspath(__file__))
-logo_path = os.path.join(current_dir, "icon", "imagem_caema.png")
+logo_path = os.path.join(current_dir, "icon", "imagem_TEST1.png")
 st.image(logo_path, width=300)
 
 st.title("ACOMPANHAMENTO DE GASTOS PREVISTOS E NÃO PREVISTOS 2026")
 
 # 🔐 SENHA DE ACESSO
-SENHA_CORRETA = "CAEMA2026"  # 👉 você define aqui
+SENHA_CORRETA = "NINA"  # 👉 você define aqui
 
 senha = st.text_input("🔐 Digite a senha para acessar o sistema", type="password")
 
@@ -74,7 +74,7 @@ if senha != SENHA_CORRETA:
 
 
 # ================== CARREGAR EXCEL ==================
-caminho_excel = os.path.join(current_dir, "dados.xlsx")
+caminho_excel = "https://docs.google.com/spreadsheets/d/1B8_LTPfI4LIIoI-MWN2BBkBEjYNJ2VgH/export?format=xlsx"
 
 df_previsto = pd.read_excel(caminho_excel, sheet_name="previsto")
 df_realizado = pd.read_excel(caminho_excel, sheet_name="realizado")
