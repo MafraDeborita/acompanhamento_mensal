@@ -19,12 +19,12 @@ st.set_page_config(
 #CSS PERSONALIZADO
 st.markdown("""
 <style>
-/* 🎨 FUNDO GRADIENTE */
+/*  FUNDO GRADIENTE */
 .stApp {
     background: linear-gradient(135deg, #1F4E5F, #2F6F89);
 }
 
-/* 📦 CARDS (containers) */
+/*  CARDS (containers) */
 [data-testid="stMetric"], 
 [data-testid="stDataFrame"], 
 [data-testid="stTable"] {
@@ -33,17 +33,17 @@ st.markdown("""
     padding: 10px;
 }
 
-/* 🔢 TEXTO DOS INDICADORES */
+/*  TEXTO DOS INDICADORES */
 [data-testid="stMetric"] * {
     color: #000000 !important;
 }
 
-/* 📝 TEXTO PRINCIPAL */
+/*  TEXTO PRINCIPAL */
 h1, h2, h3, h4, h5, h6, p, label {
     color: #FFFFFF !important;
 }
 
-/* 📝 TEXTO SECUNDÁRIO */
+/*  TEXTO SECUNDÁRIO */
 span, div {
     color: #D9E6EC;
 }
@@ -57,13 +57,13 @@ span, div {
 
 # LOGO
 current_dir = os.path.dirname(os.path.abspath(__file__))
-logo_path = os.path.join(current_dir, "icon", "imagem_TEST1.png")
+logo_path = os.path.join(current_dir, "icon", "imagem_caema.png")
 st.image(logo_path, width=300)
 
 st.title("ACOMPANHAMENTO DE GASTOS PREVISTOS E NÃO PREVISTOS 2026")
 
-# 🔐 SENHA DE ACESSO
-SENHA_CORRETA = "NINA"  # 👉 você define aqui
+#  SENHA DE ACESSO
+SENHA_CORRETA = "CAEMA2026"  #  você define aqui
 
 senha = st.text_input("🔐 Digite a senha para acessar o sistema", type="password")
 
@@ -73,34 +73,15 @@ if senha != SENHA_CORRETA:
     st.stop()
 
 
+
 # ================== CARREGAR EXCEL ==================
 caminho_excel = "https://docs.google.com/spreadsheets/d/1B8_LTPfI4LIIoI-MWN2BBkBEjYNJ2VgH/export?format=xlsx"
+
 
 df_previsto = pd.read_excel(caminho_excel, sheet_name="previsto")
 df_realizado = pd.read_excel(caminho_excel, sheet_name="realizado")
 df_orcamento = pd.read_excel(caminho_excel, sheet_name="orcamento")
-# ================== CONVERSÃO DE VALORES ==================
-df_realizado["VALOR_OC"] = (
-    df_realizado["VALOR_OC"]
-    .astype(str)
-    .str.replace(".", "", regex=False)
-    .str.replace(",", ".", regex=False)
-    .astype(float)
-)
 
-df_realizado["VALOR_NF"] = (
-    df_realizado["VALOR_NF"]
-    .astype(str)
-    .str.replace(".", "", regex=False)
-    .str.replace(",", ".", regex=False)
-    .astype(float)
-)
-df_realizado["TIPO"] = (
-    df_realizado["TIPO"]
-    .astype(str)
-    .str.upper()
-    .str.strip()
-)
 # ================== PADRONIZAÇÃO ==================
 df_previsto.columns = df_previsto.columns.str.upper().str.strip()
 df_realizado.columns = df_realizado.columns.str.upper().str.strip()
@@ -126,11 +107,11 @@ df_realizado["MES_NOME"] = df_realizado["MES_NOME"].map(mapa_meses)
 
 # ================== ABAS ==================
 diretorias = ["Dashboard", "PR", "DG", "DE", "DC", "DO"]
-tabs = st.tabs(["📊 Dashboard", "PR", "DG", "DE", "DC", "DO"])
+tabs = st.tabs(["Dashboard", "PR", "DG", "DE", "DC", "DO"])
 
 # ================== DASHBOARD ==================
 with tabs[0]:
-    st.header("📊 Dashboard Geral")
+    st.header("Dashboard Geral")
 
     total = df_realizado["VALOR_OC"].sum()
 
@@ -142,16 +123,13 @@ with tabs[0]:
     col1.metric("Total Geral", formatar_moeda(total))
     col2.metric("Serviços", formatar_moeda(servicos))
     col3.metric("Aquisições", formatar_moeda(aquisicoes))
-# if diretoria_liberada == "TODAS":  ======comeitei porque quero deixar livre por enquanto
-#     diretorias = ["PR", "DG", "DE", "DC", "DO"]
-# else:
-#     diretorias = [diretoria_liberada]
-# tabs = st.tabs(diretorias)
+
+
 
 #========graficos de linha por diretoria========
     st.markdown("---")
 #AQUISIÇÃO LINHA POR DIRETORIA
-    st.subheader("📈 Evolução Mensal - Aquisições por Diretoria")
+    st.subheader("Evolução Mensal - Aquisições por Diretoria")
 
     df_aq = df_realizado[df_realizado["TIPO"] == "AQUISICAO"]
 
@@ -171,7 +149,7 @@ with tabs[0]:
     )
 
     fig_aq.update_traces(
-        line_shape="spline",  # 👈 linha suave
+        line_shape="spline",  #  linha suave
         hovertemplate="R$ %{y:,.2f}"
     )
 
@@ -185,7 +163,7 @@ with tabs[0]:
 
     st.markdown("---")
 #SERVIÇOS LINHA POR DIRETORIA
-    st.subheader("📈 Evolução Mensal - Serviços por Diretoria")
+    st.subheader("Evolução Mensal - Serviços por Diretoria")
 
     df_sv = df_realizado[df_realizado["TIPO"] == "SERVICO"]
 
@@ -217,11 +195,10 @@ with tabs[0]:
     st.plotly_chart(fig_sv, use_container_width=True, key="linha_servico_dir")
 
     st.markdown("---")
-#DISTRIBUIÇÃO POR CLASSIFICAÇÃO
-   
-    st.subheader("📊 Distribuição por Classificação %")
+#DISTRIBUIÇÃO POR CLASSIFICAÇÃO pizza
+    st.subheader("Distribuição por Classificação %")
     df_class = (
-        df_realizado[df_realizado["TIPO"] == "AQUISICAO"]  # 👈 FILTRO AQUI
+        df_realizado[df_realizado["TIPO"] == "AQUISICAO"]  #  FILTRO AQUI
         .groupby("CLASSIFICACAO")["VALOR_OC"]
         .sum()
         .reset_index()
@@ -237,14 +214,14 @@ with tabs[0]:
         values="VALOR_OC",
         hole=0.4
     )
-    st.plotly_chart(fig, use_container_width=True)
-    col1, col2 = st.columns(2)
-    st.markdown("---")
-    
- 
 
-    # ================== 📊 BARRAS ==================
-    st.subheader("💰 Top 10 Classificações R$")
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
+
+
+    # ================== BARRAS ==================
+    st.subheader("Top 10 Classificações R$")
 
     fig_bar = px.bar(
         df_top10,
@@ -272,17 +249,10 @@ with tabs[0]:
 
 
 
-
-
-
-
-
-
-    st.markdown("---")
 #TOP GERÊNCIAS QUE MAIS GASTAM
     st.subheader("TOP 10 GERÊNCIAS QUE MAIS GASTAM")
     df_ger = (
-        df_realizado[df_realizado["TIPO"] == "AQUISICAO"]  # 👈 FILTRO AQUI
+        df_realizado[df_realizado["TIPO"] == "AQUISICAO"]  #  FILTRO AQUI
         .groupby("GERENCIA")["VALOR_OC"]
         .sum()
         .reset_index()
@@ -295,18 +265,18 @@ with tabs[0]:
         x="VALOR_OC",
         y="GERENCIA",
         orientation="h",
-        text="VALOR_OC"  # 👈 MOSTRA O VALOR
+        text="VALOR_OC"  #  MOSTRA O VALOR
     )
 
     fig.update_traces(
-        texttemplate="R$ %{text:,.2f}",  # 👈 FORMATA EM REAL
+        texttemplate="R$ %{text:,.2f}",  #  FORMATA EM REAL
         textposition="inside" #outside para mostrar fora da barra, inside para mostrar dentro da barra e automatic ou auto para deixar o Plotly decidir o melhor lugar para mostrar o valor 
     )
 
     fig.update_layout(
         xaxis_tickprefix="R$ ",
         xaxis_tickformat=",.2f",
-        yaxis=dict(autorange="reversed")  # Inverte a ordem para mostrar o maior no topo
+        yaxis=dict(autorange="reversed")
     )
 
     st.plotly_chart(fig, use_container_width=True)
@@ -324,11 +294,11 @@ with tabs[0]:
         x="PREVISTO",
         y="VALOR_OC",
         color="PREVISTO",
-        text="VALOR_OC"  # 👈 MOSTRA O VALOR
+        text="VALOR_OC"  #  MOSTRA O VALOR
     )
 
     fig.update_traces(
-        texttemplate="R$ %{text:,.2f}",  # 👈 FORMATA
+        texttemplate="R$ %{text:,.2f}",  #  FORMATA
         textposition="outside"
     )
 
@@ -363,29 +333,29 @@ with tabs[0]:
 
     st.markdown("---")
 #OC vs NF (controle financeiro)
-    st.subheader("📊 OC vs NF (Aquisição) por Diretoria vs Orçamento")
+    st.subheader("OC vs NF (Aquisição) por Diretoria vs Orçamento")
 
-    # 🔹 FILTRAR APENAS AQUISIÇÃO
+    #  FILTRAR APENAS AQUISIÇÃO
     df_aq = df_realizado[df_realizado["TIPO"] == "AQUISICAO"]
 
-    # 🔹 AGRUPAR OC e NF
+    #  AGRUPAR OC e NF
     df_oc_nf = (
         df_aq.groupby("DIRETORIA")[["VALOR_OC", "VALOR_NF"]]
         .sum()
         .reset_index()
     )
 
-    # 🔹 ORÇAMENTO (já é aquisição)
+    #  ORÇAMENTO (já é aquisição)
     df_orc = (
         df_orcamento.groupby("DIRETORIA")["ORCAMENTO_AQUISICAO"]
         .sum()
         .reset_index()
     )
 
-    # 🔹 MERGE
+    #  MERGE
     df_final = df_oc_nf.merge(df_orc, on="DIRETORIA", how="left")
 
-    # 🔹 GRÁFICO DE BARRAS
+    # GRÁFICO DE BARRAS
     fig = px.bar(
         df_final,
         x="DIRETORIA",
@@ -394,13 +364,13 @@ with tabs[0]:
         text_auto=True
     )
 
-    # 🔹 TEXTO FORA DA BARRA
+    #  TEXTO FORA DA BARRA
     fig.update_traces(
         texttemplate="R$ %{y:,.2f}",
         textposition="outside"
     )
 
-    # 🔹 LINHA DE ORÇAMENTO (SUAVE)
+    #  LINHA DE ORÇAMENTO (SUAVE)
     fig.add_scatter(
         x=df_final["DIRETORIA"],
         y=df_final["ORCAMENTO_AQUISICAO"],
@@ -408,8 +378,8 @@ with tabs[0]:
         name="Orçamento Aquisição",
         line=dict(
             shape="spline",   # mantém a linha suave
-            dash="solid",     # 👈 linha contínua
-            color="red",      # 👈 cor vermelha
+            dash="solid",     #  linha contínua
+            color="red",      #  cor vermelha
             width=3
         )
     )
@@ -423,7 +393,7 @@ with tabs[0]:
     st.plotly_chart(fig, use_container_width=True)
 
 #tabela de conferencia entre OC e NF
-    st.subheader("📊 Conferência: Orçado vs Realizado por Diretoria")
+    st.subheader("Conferência: Orçado vs Realizado por Diretoria")
 
     df_conf = (
         df_realizado[df_realizado["TIPO"] == "AQUISICAO"]
@@ -453,8 +423,8 @@ with tabs[0]:
     st.caption("📌 Este gráfico considera apenas dados de AQUISIÇÃO")
 
     st.markdown("---")
-    #INSIGHTS AUTOMÁTICOS
-    st.subheader("🧠 Insights Automáticos")
+#INSIGHTS AUTOMÁTICOS
+    st.subheader("Insights Automáticos")
 
     # 🔹 Diretoria que mais gastou (AQUISIÇÃO)
     df_aq = df_realizado[df_realizado["TIPO"] == "AQUISICAO"]
@@ -469,7 +439,7 @@ with tabs[0]:
     if not top_dir.empty:
         dir_top = top_dir.iloc[0]
 
-        st.info(f"🏆 Diretoria com maior gasto em aquisições: **{dir_top['DIRETORIA']}** "
+        st.info(f"Diretoria com maior gasto em aquisições: **{dir_top['DIRETORIA']}** "
                 f"com {formatar_moeda(dir_top['VALOR_OC'])}")
 
     # 🔹 Mês com maior gasto
@@ -483,7 +453,7 @@ with tabs[0]:
     if not top_mes.empty:
         mes_top = top_mes.iloc[0]
 
-        st.info(f"📅 Mês com maior gasto: **{mes_top['MES_NOME']}** "
+        st.info(f"Mês com maior gasto: **{mes_top['MES_NOME']}** "
                 f"com {formatar_moeda(mes_top['VALOR_OC'])}")
 
     # 🔹 % de não previsto
@@ -532,12 +502,20 @@ with tabs[0]:
 
         st.info(f"📦 Maior tipo de gasto: **{class_top['CLASSIFICACAO']}** "
                 f"com {formatar_moeda(class_top['VALOR_OC'])}")
+
+
+
+
+
+
+
+
 # ================== LOOP ==================
 diretorias = ["PR", "DG", "DE", "DC", "DO"]
 for i, diretoria in enumerate(diretorias):
 
-    with tabs[i + 1]:  # +1 porque a primeira aba é o dashboard geral
-        st.header(f"📊 Diretoria {diretoria}")
+    with tabs[i + 1]:
+        st.header(f"Diretoria {diretoria}")
 
         # FILTROS
         prev = df_previsto[df_previsto["DIRETORIA"] == diretoria]
@@ -555,9 +533,10 @@ for i, diretoria in enumerate(diretorias):
         nao_previsto = real[real["PREVISTO"] == "NAO"]["VALOR_OC"].sum()
 
         # ================== KPIs ==================
-        st.subheader("📊 Indicadores")
+        st.subheader("Indicadores")
 
         col1, col2, col3 = st.columns(3)
+
 
         col1.metric("Orçamento Aquisição", formatar_moeda(orc_aquisicao))
         col2.metric("Realizado", formatar_moeda(realizado_total))
@@ -566,7 +545,7 @@ for i, diretoria in enumerate(diretorias):
         st.markdown("---")
 
         # ================== GRÁFICO BARRAS ==================
-        st.subheader("📈 Comparativo")
+        st.subheader("Comparativo")
 
         df_grafico = pd.DataFrame({
             "Categoria": ["Orçamento", "Realizado Previsto", "Não Previsto"],
@@ -596,7 +575,7 @@ for i, diretoria in enumerate(diretorias):
         st.markdown("---")
 
         # ================== GRÁFICO LINHA ==================
-        st.subheader("📈 Evolução Mensal")
+        st.subheader("Evolução Mensal")
 
         df_linha = (
             real.groupby(["MES_NUM", "MES_NOME", "PREVISTO"])["VALOR_OC"]
@@ -626,32 +605,33 @@ for i, diretoria in enumerate(diretorias):
         fig_linha.update_layout(
             yaxis_tickprefix="R$ ",
             yaxis_tickformat=",.2f"
-        )    
+        )
 
         fig_linha.update_yaxes(
             tickprefix="R$ ",
             separatethousands=True
-        )    
+        )        
 
         st.plotly_chart(fig_linha, use_container_width=True)
 
         st.markdown("---")
 
         # ================== TABELA MENSAL ==================
-        st.subheader("📋 Realizado Previsto por Mês")
+        st.subheader("📋 Realizado por Mês")
 
         tabela_mensal = (
             real[real["PREVISTO"] == "SIM"]
             .groupby(["MES_NUM", "MES_NOME"])["VALOR_OC"]
             .sum()
             .reset_index()
-                .sort_values("MES_NUM")
+            .sort_values("MES_NUM")
         )
-        
 
         st.dataframe(
         tabela_mensal[["MES_NOME", "VALOR_OC"]]
-        .style.format({"VALOR_OC": lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")}),
+        .style.format({
+            "VALOR_OC": lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        }),
         use_container_width=True
         )
 
@@ -664,7 +644,9 @@ for i, diretoria in enumerate(diretorias):
 
         st.dataframe(
         tabela_nao_previsto[["GERENCIA", "DESCRICAO", "TIPO", "VALOR_OC"]]
-        .style.format({ "VALOR_OC": lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")}),
+        .style.format({
+            "VALOR_OC": lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        }),
         use_container_width=True
     )
         
@@ -673,7 +655,7 @@ for i, diretoria in enumerate(diretorias):
 
         st.markdown("---")
 
-        st.subheader("📊 Compras por Mês (Detalhado)")
+        st.subheader("Compras por Mês (Detalhado)")
 
         tabela_total = (
             real[["MES_NUM", "MES_NOME", "DESCRICAO", "VALOR_OC"]]
@@ -682,17 +664,11 @@ for i, diretoria in enumerate(diretorias):
 
         st.dataframe(
             tabela_total[["MES_NOME", "DESCRICAO", "VALOR_OC"]]
-            .style.format({ "VALOR_OC": lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")}),
+        .style.format({
+            "VALOR_OC": lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        }),
             use_container_width=True
         )
-
-
-        
-
-
-
-
-
 
 
 
