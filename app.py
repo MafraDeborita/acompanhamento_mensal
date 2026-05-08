@@ -78,6 +78,7 @@ if senha != SENHA_CORRETA:
 caminho_excel = "https://docs.google.com/spreadsheets/d/1B8_LTPfI4LIIoI-MWN2BBkBEjYNJ2VgH/export?format=xlsx"
 
 
+
 df_previsto = pd.read_excel(caminho_excel, sheet_name="previsto")
 df_realizado = pd.read_excel(caminho_excel, sheet_name="realizado")
 df_orcamento = pd.read_excel(caminho_excel, sheet_name="orcamento")
