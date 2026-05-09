@@ -624,37 +624,38 @@ for i, diretoria in enumerate(diretorias):
 
         # ================== TABELA MENSAL ==================
         st.subheader("📋 Realizado por Mês")
+        st.markdown("TABELA OCULTADA")
+        # tabela_mensal = (
+        #     real[real["PREVISTO"] == "SIM"]
+        #     .groupby(["MES_NUM", "MES_NOME"])["VALOR_OC"]
+        #     .sum()
+        #     .reset_index()
+        #     .sort_values("MES_NUM")
+        # )
 
-        tabela_mensal = (
-            real[real["PREVISTO"] == "SIM"]
-            .groupby(["MES_NUM", "MES_NOME"])["VALOR_OC"]
-            .sum()
-            .reset_index()
-            .sort_values("MES_NUM")
-        )
-
-        st.dataframe(
-        tabela_mensal[["MES_NOME", "VALOR_OC"]]
-        .style.format({
-            "VALOR_OC": lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-        }),
-        use_container_width=True
-        )
+        # st.dataframe(
+        # tabela_mensal[["MES_NOME", "VALOR_OC"]]
+        # .style.format({
+        #     "VALOR_OC": lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        # }),
+        # use_container_width=True
+        # )
 
         st.markdown("---")
 
         # ================== TABELA NÃO PREVISTO ==================
         st.subheader("⚠️ Não Previsto")
+        st.markdown("TABELA OCULTADA")
 
-        tabela_nao_previsto = real[real["PREVISTO"] == "NAO"]
-
-        st.dataframe(
-        tabela_nao_previsto[["GERENCIA", "DESCRICAO", "TIPO", "VALOR_OC"]]
-        .style.format({
-            "VALOR_OC": lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-        }),
-        use_container_width=True
-    )
+    #    tabela_nao_previsto = real[real["PREVISTO"] == "NAO"]
+        
+    #     st.dataframe(
+    #     tabela_nao_previsto[["GERENCIA", "DESCRICAO", "TIPO", "VALOR_OC"]]
+    #     .style.format({
+    #         "VALOR_OC": lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    #     }),
+    #     use_container_width=True
+    # )
         
 
         # ================== TABELA DETALHAMENTO POR MÊS ==================
@@ -662,19 +663,19 @@ for i, diretoria in enumerate(diretorias):
         st.markdown("---")
 
         st.subheader("Compras por Mês (Detalhado)")
+        st.markdown("TABELA OCULTADA")
+        # tabela_total = (
+        #     real[["MES_NUM", "MES_NOME", "DESCRICAO", "VALOR_OC"]]
+        #     .sort_values(["MES_NUM", "DESCRICAO"])
+        # )
 
-        tabela_total = (
-            real[["MES_NUM", "MES_NOME", "DESCRICAO", "VALOR_OC"]]
-            .sort_values(["MES_NUM", "DESCRICAO"])
-        )
-
-        st.dataframe(
-            tabela_total[["MES_NOME", "DESCRICAO", "VALOR_OC"]]
-        .style.format({
-            "VALOR_OC": lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-        }),
-            use_container_width=True
-        )
+        # st.dataframe(
+        #     tabela_total[["MES_NOME", "DESCRICAO", "VALOR_OC"]]
+        # .style.format({
+        #     "VALOR_OC": lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        # }),
+        #     use_container_width=True
+        # )
 
 
 
