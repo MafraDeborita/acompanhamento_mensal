@@ -70,7 +70,7 @@ A finalidade é **acadêmica e de estudo**, sem uso comercial.
 #  SENHA DE ACESSO
 SENHA_CORRETA = "nina"  #  você define aqui
 
-senha = st.text_input("🔐 Digite a senha para acessar o sistema", type="password")
+senha = st.text_input("🔐 Digite a senha para acessar o sistema OBS: A SENHA É: nina", type="password")
 
 if senha != SENHA_CORRETA:
     if senha != "":
