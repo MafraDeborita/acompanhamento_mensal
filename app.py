@@ -56,10 +56,10 @@ span, div {
 
 # LOGO
 current_dir = os.path.dirname(os.path.abspath(__file__))
-logo_path = os.path.join(current_dir, "icon", "imagem_caema.png")
+logo_path = os.path.join(current_dir, "icon", "image.png")
 st.image(logo_path, width=300)
 
-st.title("ACOMPANHAMENTO DE GASTOS PREVISTOS E NÃO PREVISTOS 2026")
+st.title("ACOMPANHAMENTO DE INDICADORES")
 st.markdown("""
 ⚠️ **Aviso Importante**
 
@@ -67,15 +67,15 @@ Este projeto utiliza **dados públicos** disponibilizados por órgão governamen
 Não há tratamento de dados pessoais em desacordo com a **LGPD**.  
 A finalidade é **acadêmica e de estudo**, sem uso comercial.
 """)
-#  SENHA DE ACESSO
-SENHA_CORRETA = "nina"  #  você define aqui
+# #  SENHA DE ACESSO
+# SENHA_CORRETA = "nina"  #  você define aqui
 
-senha = st.text_input("🔐 Digite a senha para acessar o sistema OBS: A SENHA É: nina", type="password")
+# senha = st.text_input("🔐 Digite a senha para acessar o sistema OBS: A SENHA É: nina", type="password")
 
-if senha != SENHA_CORRETA:
-    if senha != "":
-        st.error("Senha incorreta")
-    st.stop()
+# if senha != SENHA_CORRETA:
+#     if senha != "":
+#         st.error("Senha incorreta")
+#     st.stop()
 
 
 
