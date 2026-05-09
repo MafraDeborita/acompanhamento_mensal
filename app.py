@@ -60,9 +60,15 @@ logo_path = os.path.join(current_dir, "icon", "imagem_caema.png")
 st.image(logo_path, width=300)
 
 st.title("ACOMPANHAMENTO DE GASTOS PREVISTOS E NÃO PREVISTOS 2026")
+st.markdown("""
+⚠️ **Aviso Importante**
 
+Este projeto utiliza **dados públicos** disponibilizados por órgão governamental, conforme previsto em lei de transparência.  
+Não há tratamento de dados pessoais em desacordo com a **LGPD**.  
+A finalidade é **acadêmica e de estudo**, sem uso comercial.
+""")
 #  SENHA DE ACESSO
-SENHA_CORRETA = "CAEMA2026"  #  você define aqui
+SENHA_CORRETA = "nina"  #  você define aqui
 
 senha = st.text_input("🔐 Digite a senha para acessar o sistema", type="password")
 
