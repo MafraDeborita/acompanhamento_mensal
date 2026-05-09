@@ -8,7 +8,6 @@ def formatar_moeda(valor):
     return f"R$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 
-
 # CONFIGURAÇÃO
 st.set_page_config(
     page_title="Dashboard de Compras e Serviços",
