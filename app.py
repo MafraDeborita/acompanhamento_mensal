@@ -352,7 +352,7 @@ A finalidade é **acadêmica e de estudo**, sem uso comercial.
 
 
 # ================== CARREGAR EXCEL ==================
-URL_EXCEL = "https://docs.google.com/spreadsheets/d/1B8_LTPfI4LIIoI-MWN2BBkBEjYNJ2VgH/export?format=xlsx"
+URL_EXCEL = "https://docs.google.com/spreadsheets/d/1jRNM2nn5SdGP8pH5g_lXM3lzSP1tL3MhfiJW80GcanY/export?format=xlsx"
 
 
 @st.cache_data(ttl=300)
