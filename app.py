@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import plotly.express as px
 import requests
+from io import BytesIO
 
 
 # ==============================================================================
