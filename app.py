@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import plotly.express as px
 import requests
-from io import BytesIO
+
 
 # ==============================================================================
 # CONFIGURAÇÃO DA PÁGINA (Deve ser o primeiro comando Streamlit)
@@ -332,15 +332,6 @@ if "usuario" not in st.session_state or st.session_state.usuario is None:
 if "diretorias" not in st.session_state:
     st.session_state.diretorias = ["PR", "DG", "DE", "DC", "DO"]
 
-
-# Barra lateral com informações do usuário e Logout
-with st.sidebar:
-    st.markdown(f"### Bem-vindo, **{st.session_state.usuario.upper()}**")
-    st.markdown("---")
-    if st.button("Sair do Sistema"):
-        st.session_state.autenticado = False
-        st.session_state.usuario = None
-        st.rerun()
 
 # Cabeçalho do Dashboard
 # Logo acima do cabeçalho
