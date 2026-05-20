@@ -352,7 +352,8 @@ A finalidade é **acadêmica e de estudo**, sem uso comercial.
 
 
 # ================== CARREGAR EXCEL ==================
-URL_EXCEL = "https://docs.google.com/spreadsheets/d/1seIaYVZ1D06jPZm9O7yzXbW8hi8tgV2OzBHguyNrfMY/export?format=xlsx"
+URL_EXCEL = "https://docs.google.com/spreadsheets/d/1B8_LTPfI4LIIoI-MWN2BBkBEjYNJ2VgH/export?format=xlsx"
+
 
 @st.cache_data(ttl=300)
 def carregar_dados():
