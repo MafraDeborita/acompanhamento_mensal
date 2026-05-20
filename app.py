@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import plotly.express as px
 import requests
+from io import BytesIO
 
 # ==============================================================================
 # CONFIGURAÇÃO DA PÁGINA (Deve ser o primeiro comando Streamlit)
@@ -320,6 +321,18 @@ def formatar_moeda(valor):
 # DASHBOARD PRINCIPAL (Só acessível após login)
 # ==============================================================================
 
+# Inicialização segura do estado da sessão.
+# Isso evita AttributeError quando o app é aberto diretamente, sem uma tela de login prévia.
+if "autenticado" not in st.session_state:
+    st.session_state.autenticado = True
+
+if "usuario" not in st.session_state or st.session_state.usuario is None:
+    st.session_state.usuario = "Usuário"
+
+if "diretorias" not in st.session_state:
+    st.session_state.diretorias = ["PR", "DG", "DE", "DC", "DO"]
+
+
 # Barra lateral com informações do usuário e Logout
 with st.sidebar:
     st.markdown(f"### Bem-vindo, **{st.session_state.usuario.upper()}**")
@@ -352,10 +365,10 @@ URL_EXCEL = "https://docs.google.com/spreadsheets/d/1seIaYVZ1D06jPZm9O7yzXbW8hi8
 @st.cache_data(ttl=300)
 def carregar_dados():
 
-    response = requests.get(URL_EXCEL)
+    response = requests.get(URL_EXCEL, timeout=30)
 
     if response.status_code != 200:
-        st.error("Erro ao carregar a planilha.")
+        st.error(f"Erro ao carregar a planilha. Código HTTP: {response.status_code}")
         st.stop()
 
     arquivo_excel = BytesIO(response.content)
@@ -384,17 +397,14 @@ df_realizado["DATA"] = pd.to_datetime(df_realizado["DATA"], errors="coerce")
 # Número do mês (ordem)
 df_realizado["MES_NUM"] = df_realizado["DATA"].dt.month
 
-# Nome do mês
-df_realizado["MES_NOME"] = df_realizado["DATA"].dt.strftime("%b")
-
-# Traduzir para PT-BR
+# Nome do mês em PT-BR, independente da localidade do sistema operacional.
 mapa_meses = {
-    "Jan": "Jan", "Feb": "Fev", "Mar": "Mar", "Apr": "Abr",
-    "May": "Mai", "Jun": "Jun", "Jul": "Jul", "Aug": "Ago",
-    "Sep": "Set", "Oct": "Out", "Nov": "Nov", "Dec": "Dez"
+    1: "Jan", 2: "Fev", 3: "Mar", 4: "Abr",
+    5: "Mai", 6: "Jun", 7: "Jul", 8: "Ago",
+    9: "Set", 10: "Out", 11: "Nov", 12: "Dez"
 }
 
-df_realizado["MES_NOME"] = df_realizado["MES_NOME"].map(mapa_meses)
+df_realizado["MES_NOME"] = df_realizado["MES_NUM"].map(mapa_meses)
 
 # ================== PALETA AZUL BEBÊ ==================
 # Cor de fundo dos gráficos: azul bebê suave
@@ -405,8 +415,8 @@ BABY_BLUE = "#1CACEF"
 FONT_COLOR = "#000000"
 
 # ================== ABAS ==================
-diretorias = ["Dashboard", "PR", "DG", "DE", "DC", "DO"]
-tabs = st.tabs(["Dashboard", "PR", "DG", "DE", "DC", "DO"])
+diretorias = ["Dashboard", *st.session_state.diretorias]
+tabs = st.tabs(diretorias)
 
 # ================== DASHBOARD ==================
 with tabs[0]:
@@ -898,8 +908,12 @@ with tabs[0]:
             .sort_values(ascending=False)
         )
 
-        diretoria_top = top_dir.index[0]
-        valor_dir = top_dir.iloc[0]
+        if top_dir.empty:
+            diretoria_top = "Sem dados"
+            valor_dir = 0
+        else:
+            diretoria_top = top_dir.index[0]
+            valor_dir = top_dir.iloc[0]
 
         # Classificação que mais gastou
         top_class = (
@@ -908,8 +922,12 @@ with tabs[0]:
             .sort_values(ascending=False)
         )
 
-        class_top = top_class.index[0]
-        valor_class = top_class.iloc[0]
+        if top_class.empty:
+            class_top = "Sem dados"
+            valor_class = 0
+        else:
+            class_top = top_class.index[0]
+            valor_class = top_class.iloc[0]
 
         # Percentual não previsto
         nao_prev = df_mes[df_mes["PREVISTO"] == "NAO"]["VALOR_OC"].sum()
@@ -1118,8 +1136,10 @@ for i, diretoria in enumerate(st.session_state.diretorias):
 
         tabela_nao_previsto = real[real["PREVISTO"] == "NAO"]
 
+        colunas_nao_previsto = [col for col in ["GERENCIA", "DESCRICAO", "TIPO", "VALOR_OC"] if col in tabela_nao_previsto.columns]
+
         st.dataframe(
-        tabela_nao_previsto[["GERENCIA", "DESCRICAO", "TIPO", "VALOR_OC"]]
+        tabela_nao_previsto[colunas_nao_previsto]
         .style
         .format({ "VALOR_OC": lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")})
         .set_properties(**{
